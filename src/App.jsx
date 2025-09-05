@@ -22,11 +22,13 @@ function App() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchMovies = async () => {
+  const fetchMovies = async (query) => {
     setIsLoading(true);
-    setErrorMessage('');
+    setErrorMessage("");
     try {
-      const endpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
+      const endpoint = query
+        ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
+        : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
 
       const response = await fetch(endpoint, API_OPTIONS);
 
@@ -46,14 +48,14 @@ function App() {
     } catch (error) {
       console.error(`Error fetching movies : ${error}`);
       setErrorMessage("Failed to fetch movies, please try again later.");
-    } finally{
+    } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchMovies();
-  }, []);
+    fetchMovies(searchTerm);
+  }, [searchTerm]);
   return (
     <main>
       <div className="pattern" />
@@ -68,19 +70,17 @@ function App() {
         <section className="all-movies">
           <h2 className="mt-[40px]">All Movies</h2>
 
-          {
-            isLoading ? (
-              <Spinner />
-            ) : errorMessage ? (
-              <p className="text-red-500">{errorMessage}</p>
-            ) : (
-              <ul>
-                {movies.map((movie) => (
-                  <MovieCard movie={movie} />
-                ))}
-              </ul>
-            )
-          }
+          {isLoading ? (
+            <Spinner />
+          ) : errorMessage ? (
+            <p className="text-red-500">{errorMessage}</p>
+          ) : (
+            <ul>
+              {movies.map((movie) => (
+                <MovieCard movie={movie} />
+              ))}
+            </ul>
+          )}
         </section>
       </div>
     </main>
