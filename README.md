@@ -1,4 +1,4 @@
-# React Tic-Tac-Toe
+# React Movie Search
 
 A simple movie search React project built with **React + JavaScript + Vite + AppWrite (Database) + TMDB API (to fetch movies)**.
 
